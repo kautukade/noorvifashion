@@ -1,1 +1,161 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ivory: #faf7f2;
+  --color-cream: #f3eadf;
+  --color-nude: #e8d8c8;
+  --color-blush: #e8c6c4;
+  --color-choco: #4a3026;
+  --color-espresso: #261c18;
+  --color-gold: #b9945b;
+  --color-ink: #111111;
+
+  --font-display: "Cormorant Garamond", "Georgia", serif;
+  --font-sans: "Jost", "Trebuchet MS", sans-serif;
+
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-marquee-slow: marquee 46s linear infinite;
+  --animate-kenburns: kenburns 16s ease-in-out infinite alternate;
+  --animate-floaty: floaty 6s ease-in-out infinite;
+  --animate-floaty-late: floaty 7.5s ease-in-out 1.2s infinite;
+  --animate-spin-slow: spinSlow 22s linear infinite;
+  --animate-pulse-line: pulseLine 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes kenburns {
+    from {
+      transform: scale(1.14) translateY(-1.5%);
+    }
+    to {
+      transform: scale(1.02) translateY(1%);
+    }
+  }
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes spinSlow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes pulseLine {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    45% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    55% {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory font-sans text-espresso antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: #b9945b;
+    color: #faf7f2;
+  }
+  :focus-visible {
+    outline: 2px solid #b9945b;
+    outline-offset: 3px;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+@utility text-stroke-ivory {
+  -webkit-text-stroke: 1.5px rgba(250, 247, 242, 0.55);
+  color: transparent;
+}
+@utility text-stroke-espresso {
+  -webkit-text-stroke: 1.5px rgba(38, 28, 24, 0.35);
+  color: transparent;
+}
+@utility text-stroke-gold {
+  -webkit-text-stroke: 1.5px rgba(185, 148, 91, 0.65);
+  color: transparent;
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+}
+
+/* Hide native cursor when the custom cursor is active (desktop fine pointers) */
+html.fine-cursor,
+html.fine-cursor * {
+  cursor: none !important;
+}
+
+/* Thin elegant scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f3eadf;
+}
+::-webkit-scrollbar-thumb {
+  background: #b9945b88;
+  border-radius: 8px;
+  border: 2px solid #f3eadf;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b9945b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+  }
+}
