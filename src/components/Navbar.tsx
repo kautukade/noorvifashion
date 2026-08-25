@@ -214,6 +214,17 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.65 }}
             >
+              <div className="flex flex-wrap gap-x-6 gap-y-2.5 border-b border-ivory/10 pb-5">
+                <Link to="/shop?flag=trending" className="text-[11px] font-medium tracking-[0.25em] text-ivory/60 uppercase transition-colors hover:text-gold">
+                  Trending
+                </Link>
+                <Link to="/shop?flag=sale" className="text-[11px] font-medium tracking-[0.25em] text-ivory/60 uppercase transition-colors hover:text-gold">
+                  Offers
+                </Link>
+                <Link to="/shop?wish=1" className="text-[11px] font-medium tracking-[0.25em] text-ivory/60 uppercase transition-colors hover:text-gold">
+                  Wishlist
+                </Link>
+              </div>
               <p className="flex items-center gap-2 text-xs tracking-[0.18em] text-ivory/60 uppercase">
                 <MapPin className="h-4 w-4 text-gold" /> Gold Plaza Complex, Sonar Line, Pusad
               </p>

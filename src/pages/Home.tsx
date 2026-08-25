@@ -1,4 +1,5 @@
 import Hero from "../sections/Hero";
+import HomeJournal from "../sections/HomeJournal";
 import { JustDropped, ShopVibe, Showcase } from "../sections/HomeUpper";
 import {
   Campaign,
@@ -28,6 +29,7 @@ export default function Home() {
       <Campaign />
       <OfferBanner />
       <PriceBands />
+      <HomeJournal />
       <WhyNoorvi />
       <Testimonials />
       <InstagramGrid />

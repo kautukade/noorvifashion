@@ -111,14 +111,17 @@ Same file — `instagramUrl` and `instagramHandle` in `src/config/storeConfig.ts
 
 ```
 src/
-  components/   Navbar, Footer, ProductCard, ReelCard, SearchOverlay, CustomCursor, Loader, UI kit
-  config/       storeConfig.ts (business details) · media.ts (all photos)
+  components/   Navbar, Footer, ProductCard, ReelCard, SearchOverlay, CustomCursor,
+                Loader, UI kit, VideoPlayer, Lightbox, admin/BlogManager
+  config/       storeConfig.ts (business details) · media.ts (photos) · supabase.ts
   context/      store.tsx (products, wishlist, enquiries, site content, toasts)
-  data/         products.ts (products, categories, reels, lookbook, offers, testimonials)
-  pages/        Home, Shop, ProductDetail, Lookbook, Visit, Info, Admin
-  sections/     Hero + homepage section groups
-  utils/        helpers.ts (WhatsApp builder, formatting, stock logic)
+  data/         products.ts (catalogue) · blogSeed.ts (journal demo stories)
+  pages/        Home, Shop, ProductDetail, Lookbook, Visit, Info, Admin, Blog, BlogPost
+  sections/     Hero + homepage section groups (incl. HomeJournal)
+  services/     blog.ts — Journal API (Supabase when configured, demo otherwise)
+  utils/        helpers.ts · markdown.tsx · seo.ts
 public/         _redirects, place videos in public/videos/, photos in public/images/
+supabase/       schema.sql — run in the Supabase SQL editor to go live
 ```
 
 ## Deployment to Netlify
@@ -130,8 +133,37 @@ public/         _redirects, place videos in public/videos/, photos in public/ima
    - Publish directory: `dist`
 4. SPA redirects are already configured (`netlify.toml` + `public/_redirects`), so `/shop`, `/product/...`, `/admin` all work on refresh.
 
+## The Noorvi Journal (Blog)
+
+- Public pages: `/blog` and `/blog/:slug` — stories support **image, video, 9:16 reel, gallery and text** posts.
+- Homepage section **From the Noorvi Journal** shows the latest 3 published stories.
+- Manage everything in `/admin` → **Blog / Stories**: create, edit, delete, draft/publish/hide, feature, categories, photo + video uploads with progress, gallery drag-reorder.
+- Story content uses simple formatting: `## heading`, `**bold**`, `*italic*`, `- lists`, `> quotes`, `[links](/shop)`.
+
+## Connecting Supabase (live blog storage + real auth)
+
+The Journal runs in **demo mode** by default (data in the browser). To go live:
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor** and run `supabase/schema.sql` — it creates the
+   `blog_posts`, `blog_media`, `blog_categories` tables, RLS policies
+   (visitors can only read published posts) and the `blog-images` /
+   `blog-videos` public storage buckets.
+3. In **Authentication → Users**, add the store owner's email + password.
+4. Add the environment variables (in `.env` locally, or Netlify → Site
+   settings → Environment variables):
+
+```bash
+VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+5. Rebuild (`npm run build`). The admin login now uses **Supabase Auth**
+   (the hardcoded demo password is ignored), stories save to the database
+   and uploads go to the storage buckets.
+
 ## Demo Notes
 
-- Admin login: any email + password **`noorvi`**.
+- Admin login (demo mode only): any email + password **`noorvi`**.
 - Testimonials, opening hours and policy pages are clearly-labelled placeholders until real content is provided.
 - No fake phone numbers or reviews are invented anywhere — placeholders are centralised and easy to replace.

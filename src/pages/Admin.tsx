@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   BadgePercent,
+  BookOpen,
   ClipboardList,
   ExternalLink,
   Film,
@@ -36,6 +37,8 @@ import {
 } from "../data/products";
 import { MEDIA_OPTIONS } from "../config/media";
 import { storeConfig } from "../config/storeConfig";
+import { isSupabaseReady, supaHasSession, supaSignIn, supaSignOut } from "../config/supabase";
+import BlogManager from "../components/admin/BlogManager";
 import { useStore, type EnquiryStatus, type SiteData } from "../context/store";
 import { cn, inr, stockInfo, timeAgo, totalStock } from "../utils/helpers";
 
@@ -89,12 +92,26 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const submit = () => {
-    if (!email.trim() || !password.trim()) {
-      setError("Enter any email and the demo password.");
+  const submit = async () => {
+    if (!password.trim() || (!isSupabaseReady && !email.trim())) {
+      setError("Enter an email and password to sign in.");
       return;
     }
+    if (isSupabaseReady) {
+      // Production path — real Supabase Auth (no hardcoded passwords).
+      setBusy(true);
+      const err = await supaSignIn(email.trim(), password);
+      setBusy(false);
+      if (err) {
+        setError(err);
+        return;
+      }
+      onSuccess();
+      return;
+    }
+    // Demo path — clearly labelled, only active when Supabase keys are absent.
     if (password !== storeConfig.adminDemoPassword) {
       setError(`Demo password is “${storeConfig.adminDemoPassword}”.`);
       return;
@@ -132,7 +149,7 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
             className="mt-8 space-y-5"
             onSubmit={(e) => {
               e.preventDefault();
-              submit();
+              void submit();
             }}
           >
             <div>
@@ -160,16 +177,29 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
             {error && <p className="text-xs font-medium text-[#b3552e]">{error}</p>}
             <button
               type="submit"
-              className="group relative w-full overflow-hidden bg-espresso py-4 text-[11px] font-semibold tracking-[0.3em] text-ivory uppercase"
+              disabled={busy}
+              className="group relative w-full overflow-hidden bg-espresso py-4 text-[11px] font-semibold tracking-[0.3em] text-ivory uppercase disabled:opacity-60"
             >
               <span className="absolute inset-0 translate-y-full bg-gold transition-transform duration-500 group-hover:translate-y-0" aria-hidden />
-              <span className="relative z-10 transition-colors duration-500 group-hover:text-espresso">Enter dashboard</span>
+              <span className="relative z-10 transition-colors duration-500 group-hover:text-espresso">
+                {busy ? "Signing in…" : "Enter dashboard"}
+              </span>
             </button>
           </form>
-          <p className="mt-6 border border-gold/40 bg-gold/10 px-4 py-3 text-xs leading-relaxed text-choco/75">
-            <span className="font-semibold text-espresso">Demo access:</span> any email · password{" "}
-            <span className="font-mono font-semibold text-gold">noorvi</span>
-          </p>
+          {isSupabaseReady ? (
+            <p className="mt-6 border border-[#7c8b57]/40 bg-[#7c8b57]/10 px-4 py-3 text-xs leading-relaxed text-choco/75">
+              <span className="font-semibold text-espresso">Supabase connected ✦</span> Sign in with the
+              store owner account created in Supabase Auth. Stories save to the live database.
+            </p>
+          ) : (
+            <p className="mt-6 border border-gold/40 bg-gold/10 px-4 py-3 text-xs leading-relaxed text-choco/75">
+              <span className="font-semibold text-espresso">Demo access:</span> any email · password{" "}
+              <span className="font-mono font-semibold text-gold">noorvi</span>
+              <span className="mt-1 block text-[10px] text-choco/55">
+                Add Supabase keys to switch to real authentication — see README.
+              </span>
+            </p>
+          )}
           <Link to="/" className="mt-6 inline-flex items-center gap-2 text-[10px] tracking-[0.3em] text-choco/60 uppercase hover:text-gold">
             ← Back to website
           </Link>
@@ -750,6 +780,7 @@ const MODULES = [
   { key: "categories", label: "Categories", icon: Tags },
   { key: "inventory", label: "Inventory", icon: Package },
   { key: "orders", label: "Orders / Enquiries", icon: ClipboardList },
+  { key: "blog", label: "Blog / Stories", icon: BookOpen },
   { key: "offers", label: "Offers", icon: BadgePercent },
   { key: "homepage", label: "Homepage", icon: Home },
   { key: "reels", label: "Reels", icon: Film },
@@ -764,6 +795,15 @@ export default function Admin() {
   const [module, setModule] = useState("dashboard");
   const store = useStore();
   const { site, saveSite, pushToast, resetDemo, products } = store;
+
+  // Restore a real Supabase session on load (live mode only).
+  useEffect(() => {
+    if (isSupabaseReady) {
+      void supaHasSession().then((ok) => {
+        if (ok) setAuthed(true);
+      });
+    }
+  }, []);
 
   if (!authed) return <Login onSuccess={() => setAuthed(true)} />;
 
@@ -803,6 +843,7 @@ export default function Admin() {
             type="button"
             onClick={() => {
               sessionStorage.removeItem("noorvi_admin");
+              if (isSupabaseReady) void supaSignOut();
               setAuthed(false);
             }}
             className="flex items-center gap-3 border border-ivory/20 px-3 py-2.5 text-[10px] tracking-[0.2em] text-ivory/70 uppercase transition-colors hover:border-[#b3552e] hover:text-[#e0937a]"
@@ -819,13 +860,16 @@ export default function Admin() {
             <p className="text-[10px] tracking-[0.4em] text-gold uppercase">Noorvi back office</p>
             <h1 className="mt-2 font-display text-4xl font-semibold text-espresso md:text-5xl">{active?.label}</h1>
           </div>
-          <p className="bg-espresso px-3.5 py-1.5 text-[9px] font-bold tracking-[0.25em] text-gold uppercase">Demo mode</p>
+          <p className={cn("px-3.5 py-1.5 text-[9px] font-bold tracking-[0.25em] uppercase", isSupabaseReady ? "bg-[#7c8b57] text-ivory" : "bg-espresso text-gold")}>
+            {isSupabaseReady ? "Supabase live" : "Demo mode"}
+          </p>
         </div>
 
         {module === "dashboard" && <Dashboard goTo={setModule} />}
         {module === "products" && <ProductsPanel />}
         {module === "inventory" && <InventoryPanel />}
         {module === "orders" && <OrdersPanel />}
+        {module === "blog" && <BlogManager />}
 
         {module === "categories" && (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">

@@ -404,11 +404,38 @@ export default function ProductDetail() {
         </section>
       )}
 
+      {/* Sticky mobile order bar — one-thumb reach */}
+      <div className="fixed inset-x-0 bottom-0 z-[105] border-t border-espresso/15 bg-ivory/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-display text-sm leading-tight font-semibold text-espresso">{product.name}</p>
+            <p className="text-xs font-semibold text-gold">
+              {inr(product.price)}
+              {product.originalPrice > product.price && (
+                <span className="ml-1.5 font-normal text-choco/45 line-through">{inr(product.originalPrice)}</span>
+              )}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleOrder}
+            disabled={soldOut}
+            className={cn(
+              "flex min-h-12 shrink-0 items-center gap-2 px-5 py-3.5 text-[10px] font-bold tracking-[0.22em] uppercase",
+              soldOut ? "bg-choco/20 text-choco/50" : "bg-espresso text-ivory active:bg-gold active:text-espresso"
+            )}
+          >
+            <MessageCircle className="h-4 w-4" />
+            {soldOut ? "Sold out" : "Order on WhatsApp"}
+          </button>
+        </div>
+      </div>
+
       {/* WhatsApp draft modal */}
       <AnimatePresence>
         {modal && (
           <motion.div
-            className="fixed inset-0 z-[220] flex items-center justify-center bg-espresso/75 p-5 backdrop-blur-sm"
+            className="fixed inset-0 z-[220] flex items-end justify-center overflow-y-auto bg-espresso/75 backdrop-blur-sm sm:items-center sm:p-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -422,7 +449,7 @@ export default function ProductDetail() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 30, opacity: 0 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full max-w-lg bg-ivory p-8 md:p-10"
+              className="max-h-[92dvh] w-full overflow-y-auto bg-ivory p-7 sm:max-w-lg md:p-10"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between gap-4">
