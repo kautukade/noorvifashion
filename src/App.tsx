@@ -26,6 +26,8 @@ const Shop = lazy(() => import("./pages/Shop"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const Lookbook = lazy(() => import("./pages/Lookbook"));
 const Visit = lazy(() => import("./pages/Visit"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Info = lazy(() => import("./pages/Info"));
 const Admin = lazy(() => import("./pages/Admin"));
 
@@ -41,7 +43,8 @@ function StickyMobileCTA() {
   const { pathname } = useStoreLocation();
   const [show, setShow] = useState(false);
   const { pushToast } = useStore();
-  const hidden = pathname.startsWith("/admin");
+  // Product pages render their own sticky ORDER ON WHATSAPP bar on mobile.
+  const hidden = pathname.startsWith("/admin") || pathname.startsWith("/product/");
 
   useEffect(() => {
     const fn = () => setShow(window.scrollY > 550);
@@ -142,6 +145,8 @@ function Shell() {
                 <Route path="/product/:slug" element={<ProductDetail />} />
                 <Route path="/lookbook" element={<Lookbook />} />
                 <Route path="/visit" element={<Visit />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/terms" element={<Info type="terms" />} />
                 <Route path="/privacy" element={<Info type="privacy" />} />

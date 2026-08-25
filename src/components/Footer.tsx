@@ -10,6 +10,7 @@ const EXPLORE = [
   { label: "New Arrivals", to: "/shop?flag=new" },
   { label: "Trending", to: "/shop?flag=trending" },
   { label: "Offers", to: "/shop?flag=sale" },
+  { label: "Journal", to: "/blog" },
 ];
 
 const BOUTIQUE = [

@@ -488,8 +488,7 @@ export const NAV_LINKS: { label: string; to: string }[] = [
   { label: "Home", to: "/" },
   { label: "Shop", to: "/shop" },
   { label: "New Arrivals", to: "/shop?flag=new" },
-  { label: "Trending", to: "/shop?flag=trending" },
-  { label: "Offers", to: "/shop?flag=sale" },
+  { label: "Journal", to: "/blog" },
   { label: "Lookbook", to: "/lookbook" },
   { label: "Visit Store", to: "/visit" },
 ];
