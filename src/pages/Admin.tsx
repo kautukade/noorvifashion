@@ -1005,9 +1005,10 @@ export default function Admin() {
 
         {module === "homepage" && (
           <SimpleFormPanel
-            note="Changes appear on the live homepage the moment you save. Hero video and photos are swapped in src/config/media.ts — see the README."
+            note="For client demos, change CLIENT SHOP NAME first. That name is used across the website. Hero title is a separate homepage headline."
             fields={[
-              { key: "heroTitle", label: "Hero title", hint: "The giant word on the first screen" },
+              { key: "storeName", label: "Client shop name", hint: "Changes the top-left website name and the shop branding across the site" },
+              { key: "heroTitle", label: "Homepage hero title", hint: "Separate from shop name — this is only the giant headline on the first screen" },
               { key: "heroSubtitle", label: "Hero subtitle", hint: "The italic line under the title" },
               { key: "heroSupport", label: "Hero supporting text" },
               { key: "offerTitle", label: "Offer banner line 1" },
@@ -1016,8 +1017,21 @@ export default function Admin() {
             ]}
             values={site}
             onSave={(p) => {
-              saveSite(p);
-              pushToast("Homepage content saved ✦");
+              const storeName = String(p.storeName ?? site.storeName).trim();
+              if (!storeName) {
+                pushToast("Client shop name cannot be empty");
+                return;
+              }
+
+              const currentHero = String(site.heroTitle ?? "").trim();
+              const incomingHero = String(p.heroTitle ?? currentHero).trim();
+              const oldBrandHero = currentHero === "NOORVI" || currentHero === site.storeName.toUpperCase();
+              const heroTitle = oldBrandHero && incomingHero === currentHero
+                ? storeName.toUpperCase()
+                : incomingHero;
+
+              saveSite({ ...p, storeName, heroTitle });
+              pushToast(`Saved — website name is now “${storeName}” ✦`);
             }}
           />
         )}
