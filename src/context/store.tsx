@@ -126,10 +126,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [enquiries, setEnquiries] = useState<Enquiry[]>(() =>
     load(KEYS.enquiries, [])
   );
-  const [site, setSite] = useState<SiteData>(() => ({
-    ...DEFAULT_SITE,
-    ...load<Partial<SiteData>>(KEYS.site, {}),
-  }));
+  const [site, setSite] = useState<SiteData>(() => {
+    const saved = load<Partial<SiteData>>(KEYS.site, {});
+    const merged: SiteData = { ...DEFAULT_SITE, ...saved };
+    if (saved.storeName && (!saved.heroTitle || saved.heroTitle === "NOORVI")) {
+      merged.heroTitle = saved.storeName.toUpperCase();
+    }
+    return merged;
+  });
   const [searchOpen, setSearchOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
