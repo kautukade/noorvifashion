@@ -116,12 +116,25 @@ function Toasts() {
 function Shell() {
   const [booting, setBooting] = useState(true);
   const location = useLocation();
+  const { site } = useStore();
   const isAdmin = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     const t = window.setTimeout(() => setBooting(false), 1950);
     return () => window.clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      document.title = `${site.storeName} | Trending Girls Wear in Pusad`;
+      const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+      if (description) {
+        description.content = `Discover trendy girls wear, tops, T-shirts, corsets and new arrivals at ${site.storeName} — Gold Plaza Complex, Sonar Line, Pusad, Maharashtra.`;
+      }
+    }
+    const siteName = document.querySelector<HTMLMetaElement>('meta[property="og:site_name"]');
+    if (siteName) siteName.content = site.storeName;
+  }, [location.pathname, site.storeName]);
 
   return (
     <>
