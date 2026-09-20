@@ -819,7 +819,7 @@ export default function Admin() {
       {/* Sidebar */}
       <aside className="flex gap-1 overflow-x-auto bg-espresso p-3 text-ivory no-scrollbar lg:min-h-[100svh] lg:w-64 lg:shrink-0 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:p-5 lg:sticky lg:top-0 lg:self-start">
         <p className="hidden px-3 pb-5 font-display text-xl font-semibold tracking-[0.14em] lg:block">
-          NOORVI<span className="text-gold">✦</span> <span className="text-[10px] tracking-[0.3em] text-ivory/50 uppercase">Admin</span>
+          {site.storeName}<span className="text-gold">✦</span> <span className="text-[10px] tracking-[0.3em] text-ivory/50 uppercase">Admin</span>
         </p>
         {MODULES.map((m) => (
           <button
@@ -857,7 +857,7 @@ export default function Admin() {
       <main className="min-w-0 flex-1 p-5 md:p-9">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] tracking-[0.4em] text-gold uppercase">Noorvi back office</p>
+            <p className="text-[10px] tracking-[0.4em] text-gold uppercase">{site.storeName} back office</p>
             <h1 className="mt-2 font-display text-4xl font-semibold text-espresso md:text-5xl">{active?.label}</h1>
           </div>
           <p className={cn("px-3.5 py-1.5 text-[9px] font-bold tracking-[0.25em] uppercase", isSupabaseReady ? "bg-[#7c8b57] text-ivory" : "bg-espresso text-gold")}>
@@ -894,7 +894,7 @@ export default function Admin() {
               );
             })}
             <p className="text-xs leading-relaxed text-choco/55 sm:col-span-2 xl:col-span-3">
-              The six category rails are curated by Noorvi. Product counts update live as you edit the catalogue.
+              The six category rails are curated by {site.storeName}. Product counts update live as you edit the catalogue.
             </p>
           </div>
         )}
@@ -1014,6 +1014,7 @@ export default function Admin() {
           <SimpleFormPanel
             note="The WhatsApp number is set in one central file: src/config/storeConfig.ts — see README. Everything below edits live."
             fields={[
+              { key: "storeName", label: "Shop name", hint: "Main shop name shown in the navbar, footer and admin dashboard" },
               { key: "addressLine2", label: "Address line 2", hint: "Complex / street" },
               { key: "addressLine3", label: "Address line 3", hint: "City, state, PIN" },
               { key: "hours", label: "Opening hours", hint: "Shown on Visit Store + footer" },
@@ -1021,7 +1022,12 @@ export default function Admin() {
             ]}
             values={site}
             onSave={(p) => {
-              saveSite(p);
+              const storeName = String(p.storeName ?? site.storeName).trim();
+              if (!storeName) {
+                pushToast("Shop name cannot be empty");
+                return;
+              }
+              saveSite({ ...p, storeName });
               pushToast("Store information saved ✦");
             }}
           />
