@@ -134,6 +134,10 @@ function Shell() {
     }
     const siteName = document.querySelector<HTMLMetaElement>('meta[property="og:site_name"]');
     if (siteName) siteName.content = site.storeName;
+    const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
+    if (ogTitle && location.pathname === "/") {
+      ogTitle.content = `${site.storeName} | Trending Girls Wear in Pusad`;
+    }
   }, [location.pathname, site.storeName]);
 
   return (
