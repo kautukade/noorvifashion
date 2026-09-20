@@ -427,7 +427,22 @@ function ProductForm({
 /* ───────────────────────── Panels ───────────────────────── */
 
 function Dashboard({ goTo }: { goTo: (m: string) => void }) {
-  const { products, enquiries } = useStore();
+  const { products, enquiries, site, saveSite, pushToast } = useStore();
+  const [clientName, setClientName] = useState(site.storeName);
+
+  useEffect(() => {
+    setClientName(site.storeName);
+  }, [site.storeName]);
+
+  const saveClientName = () => {
+    const name = clientName.trim();
+    if (!name) {
+      pushToast("Client shop name cannot be empty");
+      return;
+    }
+    saveSite({ storeName: name });
+    pushToast(`Shop name changed to “${name}”`);
+  };
   const low = products.filter((p) => {
     const s = stockInfo(p);
     return s.tone === "low";
@@ -441,6 +456,45 @@ function Dashboard({ goTo }: { goTo: (m: string) => void }) {
   ];
   return (
     <div className="space-y-8">
+      <div className="border border-gold/50 bg-gold/10 p-5 md:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex-1">
+            <p className="text-[10px] font-bold tracking-[0.3em] text-gold uppercase">Client demo branding</p>
+            <h2 className="mt-2 font-display text-2xl font-semibold text-espresso md:text-3xl">Change the shop name here</h2>
+            <p className="mt-2 max-w-2xl text-xs leading-relaxed text-choco/65">
+              Enter your client's shop name and save it. The top-left website name and the rest of the dynamic branding update immediately in this browser.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <input
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveClientName();
+                }}
+                placeholder="e.g. Pari Boutique"
+                className={cn(INPUT, "max-w-xl bg-ivory")}
+              />
+              <button
+                type="button"
+                onClick={saveClientName}
+                className="shrink-0 bg-espresso px-6 py-3 text-[10px] font-semibold tracking-[0.25em] text-ivory uppercase transition-colors hover:bg-gold hover:text-espresso"
+              >
+                Save name
+              </button>
+              <Link
+                to="/"
+                className="flex shrink-0 items-center justify-center gap-2 border border-espresso/25 px-6 py-3 text-[10px] font-semibold tracking-[0.25em] text-espresso uppercase transition-colors hover:border-gold hover:text-gold"
+              >
+                View site <ExternalLink className="h-4 w-4" />
+              </Link>
+            </div>
+            <p className="mt-3 text-[10px] tracking-[0.15em] text-choco/50 uppercase">
+              Current website name: <span className="font-bold text-espresso">{site.storeName}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         {stats.map((s, i) => (
           <motion.div key={s.label} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} className="border border-espresso/12 bg-ivory p-6">
