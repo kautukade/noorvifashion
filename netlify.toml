@@ -1,4 +1,5 @@
 # Noorvi Fashion — Netlify configuration
+# Client-demo branding deploy: shop name is editable from Admin → Store Information.
 [build]
   command = "npm run build"
   publish = "dist"
