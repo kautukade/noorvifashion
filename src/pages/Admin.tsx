@@ -1013,9 +1013,9 @@ export default function Admin() {
 
         {module === "store" && (
           <SimpleFormPanel
-            note="The WhatsApp number is set in one central file: src/config/storeConfig.ts — see README. Everything below edits live."
+            note="Client demo mode: change Shop name and save. The plain-text brand name updates across the website so you can show each client their own shop name."
             fields={[
-              { key: "storeName", label: "Shop name", hint: "Main shop name shown in the navbar, footer and admin dashboard" },
+              { key: "storeName", label: "Client shop name", hint: "Change this anytime. It updates the top-left website name and the rest of the site branding." },
               { key: "addressLine2", label: "Address line 2", hint: "Complex / street" },
               { key: "addressLine3", label: "Address line 3", hint: "City, state, PIN" },
               { key: "hours", label: "Opening hours", hint: "Shown on Visit Store + footer" },
