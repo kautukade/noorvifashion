@@ -19,7 +19,7 @@ export default function Lookbook() {
         <div className="relative mx-auto max-w-[1500px]">
           <Eyebrow tone="light">Editorial · Issue 01</Eyebrow>
           <h1 className="mt-6 font-display text-6xl leading-[0.9] font-semibold md:text-[9rem]">
-            <Lines lines={[<>Noorvi</>, <em key="l" className="text-gold">looks ✦</em>]} />
+            <Lines lines={[<>{site.storeName}</>, <em key="l" className="text-gold">looks ✦</em>]} />
           </h1>
           <p className="mt-6 font-display text-2xl text-blush italic md:text-4xl">Style it your way.</p>
           <p className="mt-5 max-w-lg text-sm leading-relaxed text-ivory/65 md:text-base">
@@ -39,14 +39,14 @@ export default function Lookbook() {
                   <p className="font-display text-3xl leading-snug text-espresso italic md:text-4xl">
                     “Dress like the main character — because you are.”
                   </p>
-                  <footer className="mt-4 text-[10px] tracking-[0.35em] text-gold uppercase">— Noorvi</footer>
+                  <footer className="mt-4 text-[10px] tracking-[0.35em] text-gold uppercase">— {site.storeName}</footer>
                 </blockquote>
               )}
               <figure className="group relative overflow-hidden bg-espresso" data-cursor="view">
                 <Link to="/shop" aria-label={`Look ${String(i + 1).padStart(2, "0")} — ${look.title}`}>
                   <img
                     src={look.image}
-                    alt={`${look.title} — Noorvi lookbook`}
+                    alt={`${look.title} — ${site.storeName} lookbook`}
                     loading="lazy"
                     decoding="async"
                     className={cn(
