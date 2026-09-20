@@ -167,7 +167,7 @@ export default function Blog() {
 
   useEffect(load, []);
 
-  const catName = (slug: string) => cats.find((c) => c.slug === slug)?.name ?? "Journal";
+  const catName = (slug: string) => brandText(cats.find((c) => c.slug === slug)?.name ?? "Journal", site.storeName);
 
   const filtered = useMemo(
     () => (cat === "all" ? posts : posts.filter((p) => p.category === cat)),
@@ -209,7 +209,7 @@ export default function Blog() {
                     : "border-espresso/20 bg-transparent text-choco/70 hover:border-gold hover:text-espresso"
                 )}
               >
-                {c.name}
+                {brandText(c.name, site.storeName)}
               </button>
             ))}
           </div>
