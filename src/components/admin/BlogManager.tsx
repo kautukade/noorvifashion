@@ -299,7 +299,7 @@ function PostForm({
   cats: BlogCategory[];
   onDone: () => void;
 }) {
-  const { pushToast } = useStore();
+  const { pushToast, site } = useStore();
   const [form, setForm] = useState<BlogPost>(initial);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial.slug));
   const [saving, setSaving] = useState(false);
@@ -447,7 +447,7 @@ function PostForm({
         <div className="space-y-5">
           <UploadBox label="Featured image" kind="image" value={form.featuredImageUrl} onChange={(url) => set("featuredImageUrl", url)} />
           <div>
-            <label className={LABEL}>…or pick from the Noorvi library</label>
+            <label className={LABEL}>…or pick from the {site.storeName} library</label>
             <select value="" onChange={(e) => e.target.value && set("featuredImageUrl", e.target.value)} className={INPUT}>
               <option value="">Choose a brand photo…</option>
               {MEDIA_OPTIONS.map((m) => (
