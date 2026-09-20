@@ -79,8 +79,8 @@ export default function BlogPostPage() {
   }, [slug, site.storeName]);
 
   const catName = useMemo(
-    () => cats.find((c) => c.slug === post?.category)?.name ?? "Journal",
-    [cats, post]
+    () => brandText(cats.find((c) => c.slug === post?.category)?.name ?? "Journal", site.storeName),
+    [cats, post, site.storeName]
   );
 
   if (state === "loading") {
