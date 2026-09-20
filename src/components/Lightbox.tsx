@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useStore } from "../context/store";
 
 /** Fullscreen editorial lightbox for blog galleries. */
 export default function Lightbox({
@@ -14,6 +15,7 @@ export default function Lightbox({
   onIndex: (i: number) => void;
   onClose: () => void;
 }) {
+  const { site } = useStore();
   const open = index >= 0 && index < items.length;
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function Lightbox({
         >
           <div className="flex items-center justify-between px-5 py-4 text-ivory">
             <p className="text-[10px] tracking-[0.35em] uppercase">
-              <span className="text-gold">{index + 1}</span> / {items.length} ✦ Noorvi Journal
+              <span className="text-gold">{index + 1}</span> / {items.length} ✦ {site.storeName} Journal
             </p>
             <button
               type="button"
