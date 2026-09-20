@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-
-const LETTERS = ["N", "O", "O", "R", "V", "I"];
+import { useStore } from "../context/store";
 
 export default function Loader() {
   const [done, setDone] = useState(false);
   const reduced = useReducedMotion();
+  const { site } = useStore();
+  const letters = Array.from(site.storeName.toUpperCase());
 
   useEffect(() => {
     const t = window.setTimeout(() => setDone(true), reduced ? 500 : 1900);
@@ -17,10 +18,10 @@ export default function Loader() {
       className="fixed inset-0 z-[400] flex flex-col items-center justify-center bg-espresso"
       exit={{ y: "-100%" }}
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      aria-label="Loading Noorvi Fashion"
+      aria-label={`Loading ${site.storeName}`}
     >
       <div className="flex items-baseline overflow-hidden">
-        {LETTERS.map((l, i) => (
+        {letters.map((l, i) => (
           <motion.span
             key={i}
             className="font-display text-6xl font-semibold tracking-[0.08em] text-ivory md:text-8xl"
@@ -28,7 +29,7 @@ export default function Loader() {
             animate={{ y: "0%", opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.12 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
           >
-            {l}
+            {l === " " ? "\u00A0" : l}
           </motion.span>
         ))}
       </div>
