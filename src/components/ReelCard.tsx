@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { Instagram, Play } from "lucide-react";
 import type { Reel } from "../data/products";
 import { storeConfig } from "../config/storeConfig";
+import { useStore } from "../context/store";
 import { inr } from "../utils/helpers";
 
 export default function ReelCard({ reel }: { reel: Reel }) {
+  const { site } = useStore();
   return (
     <div className="group relative w-[240px] shrink-0 snap-center sm:w-[260px] md:w-auto md:shrink">
       <Link
@@ -24,7 +26,7 @@ export default function ReelCard({ reel }: { reel: Reel }) {
 
         {/* Reel chrome */}
         <span className="absolute top-5 left-1/2 -translate-x-1/2 text-[9px] font-medium tracking-[0.3em] text-ivory/85 uppercase">
-          ✦ Noorvi Reel
+          ✦ {site.storeName} Reel
         </span>
 
         {/* Play button */}
