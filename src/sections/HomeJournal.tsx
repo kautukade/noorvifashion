@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, CalendarDays, Play } from "lucide-react";
 import { fetchBlogCategories, fetchBlogPosts, fmtDate, type BlogCategory, type BlogPost } from "../services/blog";
-import { cn } from "../utils/helpers";
+import { brandText, cn } from "../utils/helpers";
 import { useStore } from "../context/store";
 import { Eyebrow, Reveal, SectionHead } from "../components/ui";
 
 function StoryCard({ post, catName, big }: { post: BlogPost; catName: string; big?: boolean }) {
+  const { site } = useStore();
   const isVideo = post.postType === "VIDEO" || post.postType === "REEL";
   return (
     <Link
@@ -20,7 +21,7 @@ function StoryCard({ post, catName, big }: { post: BlogPost; catName: string; bi
       <div className={cn("relative overflow-hidden bg-nude", big ? "aspect-[16/10] flex-1 lg:aspect-auto lg:min-h-[320px]" : "aspect-[16/10]")}>
         <img
           src={post.featuredImageUrl}
-          alt={post.title}
+          alt={brandText(post.title, site.storeName)}
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover transition-transform duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
@@ -44,10 +45,10 @@ function StoryCard({ post, catName, big }: { post: BlogPost; catName: string; bi
             big ? "text-3xl md:text-4xl" : "text-xl"
           )}
         >
-          {post.title}
+          {brandText(post.title, site.storeName)}
         </h3>
         <p className={cn("mt-2 text-sm leading-relaxed text-choco/65", big ? "line-clamp-2" : "line-clamp-2")}>
-          {post.excerpt}
+          {brandText(post.excerpt, site.storeName)}
         </p>
       </div>
     </Link>
@@ -79,7 +80,7 @@ export default function HomeJournal() {
   if (!loaded) return null;
   if (posts.length === 0) return null;
 
-  const catName = (slug: string) => cats.find((c) => c.slug === slug)?.name ?? "Journal";
+  const catName = (slug: string) => brandText(cats.find((c) => c.slug === slug)?.name ?? "Journal", site.storeName);
 
   return (
     <section className="bg-cream py-24 md:py-32">
