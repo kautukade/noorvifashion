@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, CalendarDays, Play } from "lucide-react";
 import { fetchBlogCategories, fetchBlogPosts, fmtDate, type BlogCategory, type BlogPost } from "../services/blog";
 import { cn } from "../utils/helpers";
+import { useStore } from "../context/store";
 import { Eyebrow, Reveal, SectionHead } from "../components/ui";
 
 function StoryCard({ post, catName, big }: { post: BlogPost; catName: string; big?: boolean }) {
@@ -55,6 +56,7 @@ function StoryCard({ post, catName, big }: { post: BlogPost; catName: string; bi
 
 /** FROM THE NOORVI JOURNAL — latest 3 published stories. */
 export default function HomeJournal() {
+  const { site } = useStore();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [cats, setCats] = useState<BlogCategory[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -85,7 +87,7 @@ export default function HomeJournal() {
         <div className="flex flex-wrap items-end justify-between gap-8">
           <SectionHead
             eyebrow="The journal"
-            title={[<>From the Noorvi</>, <em key="j" className="text-gold">journal ✦</em>]}
+            title={[<>From {site.storeName}</>, <em key="j" className="text-gold">journal ✦</em>]}
             copy="Fresh from the rack, the store and our feed — drops, styling notes and behind-the-scenes."
             className="max-w-xl"
           />
