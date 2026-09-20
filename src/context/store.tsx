@@ -190,7 +190,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const saveSite = useCallback((patch: Partial<SiteData>) => {
-    setSite((s) => ({ ...s, ...patch }));
+    setSite((s) => {
+      const next = { ...s, ...patch };
+      if (typeof patch.storeName === "string") {
+        const cleaned = patch.storeName.trim();
+        next.storeName = cleaned || s.storeName;
+
+        // Keep the default brand-style hero title in sync with the shop name,
+        // but preserve a deliberately customized hero headline.
+        const previousBrandTitles = new Set(["NOORVI", s.storeName.toUpperCase()]);
+        if (patch.heroTitle === undefined && previousBrandTitles.has(s.heroTitle)) {
+          next.heroTitle = next.storeName.toUpperCase();
+        }
+      }
+      return next;
+    });
   }, []);
 
   const resetDemo = useCallback(() => {
