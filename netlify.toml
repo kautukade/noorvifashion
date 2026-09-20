@@ -10,3 +10,4 @@
   to = "/index.html"
   status = 200
 # Production refresh: client shop name editor is available in Homepage.
+# Production branch synced with editable client shop-name controls.
