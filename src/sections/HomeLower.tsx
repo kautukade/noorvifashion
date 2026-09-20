@@ -41,7 +41,7 @@ export function TrendingReels() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead
             eyebrow="Straight from our feed"
-            title={[<>Trending at</>, <>Noorvi ✦</>]}
+            title={[<>Trending at</>, <>{site.storeName} ✦</>]}
             copy="The looks Pusad is double-tapping. Watch, pick a vibe, and it's yours before the weekend."
           />
           <Reveal delay={0.3}>
@@ -75,6 +75,7 @@ export function TrendingReels() {
 /* ═══════════════════ CAMPAIGN — pinned scale reveal ═══════════════════ */
 
 export function Campaign() {
+  const { site } = useStore();
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -86,11 +87,11 @@ export function Campaign() {
   if (reduced) {
     return (
       <section className="relative flex min-h-[80svh] items-center justify-center overflow-hidden bg-espresso">
-        <img src={MEDIA.look8} alt="Noorvi campaign film still" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={MEDIA.look8} alt={`${site.storeName} campaign film still`} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-espresso/55" />
         <div className="relative z-10 px-6 text-center text-ivory">
           <h2 className="font-display text-5xl font-semibold md:text-7xl">
-            This is your <em className="text-gold">Noorvi era.</em>
+            This is your <em className="text-gold">{site.storeName} era.</em>
           </h2>
           <div className="mt-8 flex justify-center">
             <Btn to="/shop" tone="gold">Explore the collection</Btn>
@@ -110,13 +111,13 @@ export function Campaign() {
         >
           <img
             src={MEDIA.look8}
-            alt="Noorvi campaign — party wear film"
+            alt={`${site.storeName} campaign — party wear film`}
             loading="lazy"
             className="h-full w-full object-cover motion-safe:animate-kenburns"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-espresso/80 via-espresso/20 to-espresso/40" />
           <span className="absolute top-6 left-1/2 -translate-x-1/2 text-[9px] tracking-[0.45em] text-ivory/80 uppercase">
-            ✦ Season film · Noorvi
+            ✦ Season film · {site.storeName}
           </span>
 
           <motion.div
@@ -125,7 +126,7 @@ export function Campaign() {
           >
             <h2 className="font-display text-5xl leading-[0.95] font-semibold text-ivory md:text-8xl">
               This is your
-              <em className="mt-1 block text-gold">Noorvi era.</em>
+              <em className="mt-1 block text-gold">{site.storeName} era.</em>
             </h2>
             <div className="mt-9">
               <Btn to="/shop" tone="gold">
@@ -160,7 +161,7 @@ export function OfferBanner() {
       </div>
 
       <div className="relative mx-auto max-w-[1500px] px-6 text-center md:px-10">
-        <Eyebrow className="justify-center">This week at Noorvi</Eyebrow>
+        <Eyebrow className="justify-center">This week at {site.storeName}</Eyebrow>
         <Reveal>
           <h2 className="mt-8">
             <span className="block font-display text-[clamp(2.6rem,8vw,7rem)] leading-none font-semibold tracking-wide text-espresso">
@@ -254,12 +255,13 @@ const WHY = [
 ];
 
 export function WhyNoorvi() {
+  const { site } = useStore();
   return (
     <section className="bg-cream py-24 md:py-32">
       <div className="mx-auto max-w-[1500px] px-6 md:px-10">
         <SectionHead
           eyebrow="Why the girls choose us"
-          title={[<>The Noorvi</>, <>promise ✦</>]}
+          title={[<>The {site.storeName}</>, <>promise ✦</>]}
         />
         <div className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {WHY.map((w, i) => (
@@ -285,6 +287,7 @@ export function WhyNoorvi() {
 /* ═══════════════════ TESTIMONIALS ═══════════════════ */
 
 export function Testimonials() {
+  const { site } = useStore();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const t = TESTIMONIALS[idx];
@@ -302,7 +305,7 @@ export function Testimonials() {
       onMouseLeave={() => setPaused(false)}
     >
       <div className="mx-auto max-w-3xl px-6 text-center">
-        <SectionHead align="center" eyebrow="Love notes" title={[<>Noorvi girls</>, <>say ✦</>]} />
+        <SectionHead align="center" eyebrow="Love notes" title={[<>{site.storeName} girls</>, <>say ✦</>]} />
         <p className="mx-auto mt-4 inline-block bg-blush/60 px-4 py-1.5 text-[10px] tracking-[0.22em] text-choco uppercase">
           Demo layout — real reviews will appear here
         </p>
@@ -438,7 +441,7 @@ export function VisitStore() {
         <div>
           <Eyebrow tone="light">Local love</Eyebrow>
           <h2 className="mt-6 font-display text-6xl leading-[0.92] font-semibold md:text-8xl">
-            <Lines lines={[<>Visit</>, <em key="n" className="text-gold">Noorvi ✦</em>]} />
+            <Lines lines={[<>Visit</>, <em key="n" className="text-gold">{site.storeName} ✦</em>]} />
           </h2>
           <Reveal delay={0.2}>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-ivory/65 md:text-base">
@@ -450,7 +453,7 @@ export function VisitStore() {
           <Reveal delay={0.3}>
             <dl className="mt-10 max-w-md divide-y divide-ivory/10 border-y border-ivory/10">
               {[
-                ["Boutique", storeConfig.address.line1],
+                ["Boutique", site.storeName],
                 ["Address", `${site.addressLine2}, ${site.addressLine3}`],
                 ["Hours", site.hours],
               ].map(([k, v]) => (
@@ -483,7 +486,7 @@ export function VisitStore() {
         <Reveal delay={0.25} y={50}>
           <div className="relative">
             <div className="absolute -inset-3 translate-x-4 translate-y-4 border border-gold/50" aria-hidden />
-            <SmartImg src={MEDIA.store} alt="Inside the Noorvi boutique" className="relative aspect-[5/4] w-full" />
+            <SmartImg src={MEDIA.store} alt={`Inside the ${site.storeName} boutique`} className="relative aspect-[5/4] w-full" />
             <span className="absolute -top-5 -left-3 bg-gold px-4 py-2 text-[10px] font-semibold tracking-[0.3em] text-espresso uppercase shadow-lg motion-safe:animate-floaty md:-left-6">
               Gold Plaza ✦ Sonar Line
             </span>
@@ -503,6 +506,7 @@ export function VisitStore() {
 /* ═══════════════════ NEWSLETTER / CLUB ═══════════════════ */
 
 export function Newsletter() {
+  const { site } = useStore();
   const [mode, setMode] = useState<"wa" | "email">("wa");
   const [value, setValue] = useState("");
   const [joined, setJoined] = useState(false);
@@ -514,7 +518,7 @@ export function Newsletter() {
         <div>
           <Eyebrow>First dibs, always</Eyebrow>
           <h2 className="mt-6 font-display text-5xl leading-[0.95] font-semibold text-espresso md:text-7xl">
-            <Lines lines={[<>Join the</>, <>Noorvi club ✦</>]} />
+            <Lines lines={[<>Join the</>, <>{site.storeName} club ✦</>]} />
           </h2>
           <Reveal delay={0.25}>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-choco/80 md:text-base">
