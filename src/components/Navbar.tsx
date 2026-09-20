@@ -59,16 +59,16 @@ export default function Navbar() {
         )}
       >
         <div className="mx-auto flex max-w-[1500px] items-center justify-between px-5 md:px-10">
-          {/* Logo */}
+          {/* Editable client shop name — plain text, no fixed logo/symbol */}
           <Link
             to="/"
             className={cn(
-              "font-display text-2xl font-semibold tracking-[0.14em] md:text-[26px]",
+              "max-w-[55vw] break-words font-display text-[clamp(1.05rem,2.2vw,1.625rem)] leading-tight font-semibold tracking-[0.08em]",
               dark ? "text-ivory" : "text-espresso"
             )}
             aria-label={`${site.storeName} — home`}
           >
-            {site.storeName}<span className="ml-1 text-gold">✦</span>
+            {site.storeName}
           </Link>
 
           {/* Desktop links */}
@@ -174,8 +174,8 @@ export default function Navbar() {
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
           >
             <div className="flex items-center justify-between">
-              <span className="font-display text-2xl font-semibold tracking-[0.14em]">
-                {site.storeName}<span className="ml-1 text-gold">✦</span>
+              <span className="max-w-[70vw] break-words font-display text-2xl leading-tight font-semibold tracking-[0.08em]">
+                {site.storeName}
               </span>
               <button
                 type="button"
