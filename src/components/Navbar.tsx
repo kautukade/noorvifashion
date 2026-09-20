@@ -17,7 +17,7 @@ import { storeConfig } from "../config/storeConfig";
 
 export default function Navbar() {
   const { pathname } = useLocation();
-  const { wishlist, setSearchOpen, pushToast } = useStore();
+  const { wishlist, setSearchOpen, pushToast, site } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -66,9 +66,9 @@ export default function Navbar() {
               "font-display text-2xl font-semibold tracking-[0.14em] md:text-[26px]",
               dark ? "text-ivory" : "text-espresso"
             )}
-            aria-label="Noorvi Fashion — home"
+            aria-label={`${site.storeName} — home`}
           >
-            NOORVI<span className="ml-1 text-gold">✦</span>
+            {site.storeName}<span className="ml-1 text-gold">✦</span>
           </Link>
 
           {/* Desktop links */}
@@ -134,7 +134,7 @@ export default function Navbar() {
               href={storeConfig.instagramUrl}
               target="_blank"
               rel="noreferrer"
-              aria-label="Noorvi on Instagram"
+              aria-label={`${site.storeName} on Instagram`}
               className="hidden rounded-full p-2.5 transition-colors hover:bg-gold/15 hover:text-gold sm:block"
             >
               <Instagram className="h-[18px] w-[18px]" strokeWidth={1.6} />
@@ -175,7 +175,7 @@ export default function Navbar() {
           >
             <div className="flex items-center justify-between">
               <span className="font-display text-2xl font-semibold tracking-[0.14em]">
-                NOORVI<span className="ml-1 text-gold">✦</span>
+                {site.storeName}<span className="ml-1 text-gold">✦</span>
               </span>
               <button
                 type="button"
