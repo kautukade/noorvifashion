@@ -36,10 +36,10 @@ export default function Footer() {
         <Reveal y={60}>
           <Link
             to="/"
-            aria-label="Back to top — Noorvi Fashion"
+            aria-label={`Back to top — ${site.storeName}`}
             className="block text-center font-display text-[21vw] leading-[0.85] font-semibold tracking-[0.04em] text-stroke-ivory transition-colors duration-700 select-none hover:text-ivory md:text-[17vw]"
           >
-            NOORVI
+            {site.storeName}
           </Link>
         </Reveal>
         <p className="mt-2 text-center text-[10px] tracking-[0.5em] text-gold uppercase md:text-[11px]">
@@ -51,7 +51,7 @@ export default function Footer() {
       <div className="mx-auto mt-16 grid max-w-[1500px] gap-12 border-t border-ivory/10 px-6 py-14 md:grid-cols-12 md:px-10">
         <div className="md:col-span-4">
           <p className="font-display text-3xl font-semibold">
-            Noorvi<span className="text-gold">✦</span>
+            {site.storeName}<span className="text-gold">✦</span>
           </p>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/60">
             Trend-led girls wear at honest prices — corsets, tees, party looks and
@@ -147,7 +147,7 @@ export default function Footer() {
           <p className="mt-5 flex items-start gap-2 text-sm leading-relaxed text-ivory/70">
             <MapPin className="mt-1 h-4 w-4 shrink-0 text-gold" />
             <span>
-              {storeConfig.address.line1}
+              {site.storeName}
               <br />
               {site.addressLine2}
               <br />
@@ -161,7 +161,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-ivory/10 px-6 py-6 md:px-10">
         <div className="mx-auto flex max-w-[1500px] flex-col items-center justify-between gap-3 text-[10px] tracking-[0.28em] text-ivory/45 uppercase md:flex-row">
-          <p>© {year} Noorvi Fashion — Pusad, Maharashtra</p>
+          <p>© {year} {site.storeName} — Pusad, Maharashtra</p>
           <p className="text-gold/80">Crafted with ✦ for the girls of Pusad</p>
           <Link to="/admin" className="transition-colors hover:text-gold">
             Admin
