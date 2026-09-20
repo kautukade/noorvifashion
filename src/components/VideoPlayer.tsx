@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Maximize, Minimize, Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "../utils/helpers";
+import { useStore } from "../context/store";
 
 /**
  * Premium custom video player for Noorvi Journal posts.
@@ -22,6 +23,7 @@ export default function VideoPlayer({
   title?: string;
   className?: string;
 }) {
+  const { site } = useStore();
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -102,7 +104,7 @@ export default function VideoPlayer({
           preload="metadata"
           playsInline
           muted={muted}
-          aria-label={title ?? "Noorvi fashion video"}
+          aria-label={title ?? `${site.storeName} fashion video`}
           className="h-full w-full object-contain"
           onClick={toggle}
           onPlay={() => setPlaying(true)}

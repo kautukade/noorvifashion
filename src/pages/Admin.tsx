@@ -89,6 +89,7 @@ function slugify(name: string): string {
 /* ───────────────────────── Login ───────────────────────── */
 
 function Login({ onSuccess }: { onSuccess: () => void }) {
+  const { site } = useStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -124,7 +125,7 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
     <div className="flex min-h-[100svh] flex-col lg:flex-row">
       <div className="grain flex flex-1 flex-col justify-between bg-espresso p-10 text-ivory">
         <p className="font-display text-2xl font-semibold tracking-[0.14em]">
-          NOORVI<span className="text-gold">✦</span>
+          {site.storeName}<span className="text-gold">✦</span>
         </p>
         <div>
           <p className="text-[10px] tracking-[0.4em] text-gold uppercase">Back office</p>

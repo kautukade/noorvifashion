@@ -24,7 +24,7 @@ import {
 } from "../services/blog";
 import { renderMarkdown } from "../utils/markdown";
 import { setPageMeta } from "../utils/seo";
-import { cn, copyText, isWhatsAppReady } from "../utils/helpers";
+import { brandText, cn, copyText, isWhatsAppReady } from "../utils/helpers";
 import { storeConfig } from "../config/storeConfig";
 import { useStore } from "../context/store";
 import VideoPlayer from "../components/VideoPlayer";
@@ -41,7 +41,7 @@ const GALLERY_SPANS = [
 
 export default function BlogPostPage() {
   const { slug } = useParams();
-  const { pushToast } = useStore();
+  const { pushToast, site } = useStore();
   const [post, setPost] = useState<Post | null>(null);
   const [cats, setCats] = useState<BlogCategory[]>([]);
   const [related, setRelated] = useState<Post[]>([]);
@@ -59,14 +59,14 @@ export default function BlogPostPage() {
         setCats(c);
         if (!p) {
           setState("notfound");
-          setPageMeta({ title: "Story not found | Noorvi Journal" });
+          setPageMeta({ title: `Story not found | ${site.storeName} Journal` });
           return;
         }
         setPost(p);
         setRelated(all.filter((x) => x.id !== p.id && x.category === p.category).slice(0, 3));
         setPageMeta({
-          title: `${p.title} | Noorvi Journal`,
-          description: p.excerpt || `A story from the Noorvi Fashion journal — ${p.title}`,
+          title: `${brandText(p.title, site.storeName)} | ${site.storeName} Journal`,
+          description: brandText(p.excerpt, site.storeName) || `A story from the ${site.storeName} journal — ${brandText(p.title, site.storeName)}`,
           image: p.featuredImageUrl || undefined,
         });
         void incrementPostViews(p.id);
@@ -76,11 +76,11 @@ export default function BlogPostPage() {
     return () => {
       alive = false;
     };
-  }, [slug]);
+  }, [slug, site.storeName]);
 
   const catName = useMemo(
-    () => cats.find((c) => c.slug === post?.category)?.name ?? "Journal",
-    [cats, post]
+    () => brandText(cats.find((c) => c.slug === post?.category)?.name ?? "Journal", site.storeName),
+    [cats, post, site.storeName]
   );
 
   if (state === "loading") {
@@ -110,7 +110,7 @@ export default function BlogPostPage() {
           {state === "error" ? (
             <>Something snagged <em className="text-gold">on the rack.</em></>
           ) : (
-            <>The next Noorvi story <em className="text-gold">is being styled.</em></>
+            <>The next {site.storeName} story <em className="text-gold">is being styled.</em></>
           )}
         </h1>
         <p className="mt-5 max-w-md text-sm leading-relaxed text-choco/65">
@@ -139,7 +139,7 @@ export default function BlogPostPage() {
   if (!post) return null;
 
   const isVideoPost = post.postType === "VIDEO" || post.postType === "REEL";
-  const shareText = `${post.title} — Noorvi Fashion, Pusad`;
+  const shareText = `${brandText(post.title, site.storeName)} — ${site.storeName}, Pusad`;
   const shareUrl = window.location.href;
 
   const onCopy = async () => {
@@ -158,7 +158,7 @@ export default function BlogPostPage() {
             to="/blog"
             className="group inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.3em] text-choco/60 uppercase transition-colors hover:text-gold"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Noorvi Journal
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> {site.storeName} Journal
           </Link>
           <p className="flex items-center gap-4 text-[10px] font-semibold tracking-[0.25em] text-choco/55 uppercase">
             <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-gold" /> {fmtDate(post.publishedAt)}</span>
@@ -172,11 +172,11 @@ export default function BlogPostPage() {
         <div className="mt-8 max-w-4xl">
           <Eyebrow>{catName}</Eyebrow>
           <h1 className="mt-5 font-display text-5xl leading-[0.95] font-semibold text-espresso md:text-7xl lg:text-8xl">
-            <Lines lines={[post.title]} />
+            <Lines lines={[brandText(post.title, site.storeName)]} />
           </h1>
           <Reveal delay={0.2}>
             <p className="mt-6 max-w-2xl font-display text-xl leading-relaxed text-choco/75 italic md:text-2xl">
-              {post.excerpt}
+              {brandText(post.excerpt, site.storeName)}
             </p>
           </Reveal>
         </div>
@@ -219,21 +219,21 @@ export default function BlogPostPage() {
               src={post.videoUrl}
               poster={post.videoPosterUrl || post.featuredImageUrl}
               ratio={post.videoRatio}
-              title={post.title}
+              title={brandText(post.title, site.storeName)}
               className={cn("mx-auto w-full", post.videoRatio === "9/16" ? "max-w-sm md:max-w-md" : "max-w-4xl")}
             />
           ) : post.featuredImageUrl ? (
             <div className="relative mx-auto max-w-5xl overflow-hidden">
-              <SmartImg src={post.featuredImageUrl} alt={post.title} className="aspect-[4/3] w-full sm:aspect-[16/10]" />
+              <SmartImg src={post.featuredImageUrl} alt={brandText(post.title, site.storeName)} className="aspect-[4/3] w-full sm:aspect-[16/10]" />
               <span className="absolute bottom-4 left-4 bg-espresso/80 px-4 py-2 text-[9px] font-semibold tracking-[0.3em] text-gold uppercase backdrop-blur">
-                {catName} ✦ Noorvi
+                {catName} ✦ {site.storeName}
               </span>
             </div>
           ) : null}
         </Reveal>
 
         {/* Body */}
-        <div className="mx-auto mt-12 max-w-2xl">{renderMarkdown(post.content)}</div>
+        <div className="mx-auto mt-12 max-w-2xl">{renderMarkdown(brandText(post.content, site.storeName))}</div>
 
         {/* Gallery */}
         {post.gallery.length > 0 && (
@@ -255,11 +255,11 @@ export default function BlogPostPage() {
                     "group relative overflow-hidden bg-nude focus-visible:outline-2 focus-visible:outline-gold",
                     GALLERY_SPANS[i % GALLERY_SPANS.length]
                   )}
-                  aria-label={`Open photo: ${g.alt || post.title}`}
+                  aria-label={`Open photo: ${brandText(g.alt || post.title, site.storeName)}`}
                 >
                   <img
                     src={g.url}
-                    alt={g.alt || post.title}
+                    alt={brandText(g.alt || post.title, site.storeName)}
                     loading="lazy"
                     decoding="async"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -326,7 +326,7 @@ export default function BlogPostPage() {
                     <div className="aspect-[16/10] overflow-hidden bg-nude">
                       <img
                         src={r.featuredImageUrl}
-                        alt={r.title}
+                        alt={brandText(r.title, site.storeName)}
                         loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
@@ -334,7 +334,7 @@ export default function BlogPostPage() {
                     <div className="p-6">
                       <p className="text-[9px] font-semibold tracking-[0.28em] text-gold uppercase">{fmtDate(r.publishedAt)}</p>
                       <h3 className="mt-2 font-display text-xl leading-snug font-semibold text-espresso transition-colors group-hover:text-gold">
-                        {r.title}
+                        {brandText(r.title, site.storeName)}
                       </h3>
                     </div>
                   </Link>
@@ -346,7 +346,7 @@ export default function BlogPostPage() {
       </article>
 
       <Lightbox
-        items={post.gallery.map((g) => ({ url: g.url, alt: g.alt }))}
+        items={post.gallery.map((g) => ({ url: g.url, alt: brandText(g.alt, site.storeName) }))}
         index={lightbox}
         onIndex={setLightbox}
         onClose={() => setLightbox(-1)}

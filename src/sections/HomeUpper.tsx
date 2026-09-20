@@ -62,6 +62,7 @@ export function JustDropped() {
 /* ═══════════════════ SHOP YOUR VIBE ═══════════════════ */
 
 function CategoryTile({ cat, count, className }: { cat: Category; count: number; className?: string }) {
+  const { site } = useStore();
   return (
     <Link
       to={`/shop?cat=${cat.slug}`}
@@ -71,7 +72,7 @@ function CategoryTile({ cat, count, className }: { cat: Category; count: number;
     >
       <img
         src={cat.image}
-        alt={`${cat.name} at Noorvi`}
+        alt={`${cat.name} at ${site.storeName}`}
         loading="lazy"
         decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08]"
@@ -157,6 +158,7 @@ const SHOWCASE_IMGS = [
 ];
 
 export function Showcase() {
+  const { site } = useStore();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
@@ -190,7 +192,7 @@ export function Showcase() {
 
       <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
         <Eyebrow tone="light" className="justify-center">
-          The Noorvi effect
+          The {site.storeName} effect
         </Eyebrow>
         <h2 className="mt-6 font-display text-6xl leading-[0.92] font-semibold md:text-8xl">
           <Lines
@@ -204,7 +206,7 @@ export function Showcase() {
         </h2>
         <Reveal delay={0.3}>
           <p className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-ivory/65 md:text-base">
-            Trending looks. Fresh drops. Noorvi attitude. Every piece on the rack
+            Trending looks. Fresh drops. {site.storeName} attitude. Every piece on the rack
             was picked to turn heads on Sonar Line — and your feed.
           </p>
         </Reveal>

@@ -1,6 +1,8 @@
 import { Link, Navigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Eyebrow, Lines, Reveal } from "../components/ui";
+import { useStore } from "../context/store";
+import { brandText } from "../utils/helpers";
 
 const CONTENT: Record<
   string,
@@ -39,6 +41,7 @@ const CONTENT: Record<
 };
 
 export default function Info({ type }: { type: string }) {
+  const { site } = useStore();
   const c = CONTENT[type];
   if (!c) return <Navigate to="/" replace />;
 
@@ -59,7 +62,7 @@ export default function Info({ type }: { type: string }) {
         <div className="mt-10 space-y-6">
           {c.body.map((p, i) => (
             <Reveal key={i} delay={i * 0.08}>
-              <p className="border-l-2 border-gold/40 pl-5 text-sm leading-relaxed text-choco/80 md:text-base">{p}</p>
+              <p className="border-l-2 border-gold/40 pl-5 text-sm leading-relaxed text-choco/80 md:text-base">{brandText(p, site.storeName)}</p>
             </Reveal>
           ))}
         </div>
@@ -68,7 +71,7 @@ export default function Info({ type }: { type: string }) {
             to="/"
             className="group mt-14 inline-flex items-center gap-2 text-[11px] tracking-[0.3em] text-espresso uppercase hover:text-gold"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Noorvi
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to {site.storeName}
           </Link>
         </Reveal>
       </div>

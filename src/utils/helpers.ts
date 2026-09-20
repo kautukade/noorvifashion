@@ -77,3 +77,9 @@ export function timeAgo(ts: number): string {
 export function uid(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
+
+
+/** Replace the original Noorvi brand wording with the current admin-configured shop name. */
+export function brandText(text: string, storeName: string): string {
+  return text.replace(/Noorvi(?: Ladies Wear| Fashion)?/gi, storeName);
+}

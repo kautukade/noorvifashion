@@ -13,8 +13,10 @@ import {
   WhyNoorvi,
 } from "../sections/HomeLower";
 import { Marquee } from "../components/ui";
+import { useStore } from "../context/store";
 
 export default function Home() {
+  const { site } = useStore();
   return (
     <>
       <Hero />
@@ -35,7 +37,7 @@ export default function Home() {
       <InstagramGrid />
       <VisitStore />
       <Marquee
-        items={["Noorvi Era", "Style It Your Way", "Sonar Line", "Fresh Drops", "Shop Local"]}
+        items={[`${site.storeName} Era`, "Style It Your Way", "Sonar Line", "Fresh Drops", "Shop Local"]}
         tone="gold"
         reverse
         slow

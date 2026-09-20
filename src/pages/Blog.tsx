@@ -9,13 +9,15 @@ import {
   type BlogCategory,
   type BlogPost,
 } from "../services/blog";
-import { cn } from "../utils/helpers";
+import { brandText, cn } from "../utils/helpers";
+import { useStore } from "../context/store";
 import { setPageMeta } from "../utils/seo";
 import { usePointerFine, Eyebrow, Lines, Reveal } from "../components/ui";
 
 /* ─────────────────────── Card media (with hover video preview) ─────────────────────── */
 
 function CardMedia({ post, aspect }: { post: BlogPost; aspect: string }) {
+  const { site } = useStore();
   const fine = usePointerFine();
   const [preview, setPreview] = useState(false);
   const hasVideo = Boolean(post.videoUrl);
@@ -28,7 +30,7 @@ function CardMedia({ post, aspect }: { post: BlogPost; aspect: string }) {
     >
       <img
         src={post.featuredImageUrl}
-        alt={post.title}
+        alt={brandText(post.title, site.storeName)}
         loading="lazy"
         decoding="async"
         className={cn(
@@ -74,6 +76,7 @@ function CardMedia({ post, aspect }: { post: BlogPost; aspect: string }) {
 }
 
 function BlogCard({ post, catName, index }: { post: BlogPost; catName: string; index: number }) {
+  const { site } = useStore();
   const aspects = ["aspect-[4/5]", "aspect-[3/4]", "aspect-square"];
   const aspect = post.postType === "REEL" ? "aspect-[4/5]" : aspects[index % aspects.length];
 
@@ -93,9 +96,9 @@ function BlogCard({ post, catName, index }: { post: BlogPost; catName: string; i
           </span>
         </div>
         <h3 className="mt-3 font-display text-2xl leading-snug font-semibold text-espresso transition-colors group-hover:text-gold">
-          {post.title}
+          {brandText(post.title, site.storeName)}
         </h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-choco/65">{post.excerpt}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-choco/65">{brandText(post.excerpt, site.storeName)}</p>
         <span className="mt-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.28em] text-espresso uppercase transition-all group-hover:gap-3 group-hover:text-gold">
           Read more <ArrowUpRight className="h-3.5 w-3.5" />
         </span>
@@ -137,6 +140,7 @@ function JournalSkeleton() {
 /* ─────────────────────── Page ─────────────────────── */
 
 export default function Blog() {
+  const { site } = useStore();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [cats, setCats] = useState<BlogCategory[]>([]);
   const [cat, setCat] = useState("all");
@@ -144,11 +148,11 @@ export default function Blog() {
 
   useEffect(() => {
     setPageMeta({
-      title: "Noorvi Journal | Stories from the Rack",
+      title: `${site.storeName} Journal | Stories from the Rack`,
       description:
-        "New drops, styling inspiration, behind the scenes and everything happening at Noorvi Fashion, Pusad.",
+        `New drops, styling inspiration, behind the scenes and everything happening at ${site.storeName}, Pusad.`,
     });
-  }, []);
+  }, [site.storeName]);
 
   const load = () => {
     setState("loading");
@@ -163,7 +167,7 @@ export default function Blog() {
 
   useEffect(load, []);
 
-  const catName = (slug: string) => cats.find((c) => c.slug === slug)?.name ?? "Journal";
+  const catName = (slug: string) => brandText(cats.find((c) => c.slug === slug)?.name ?? "Journal", site.storeName);
 
   const filtered = useMemo(
     () => (cat === "all" ? posts : posts.filter((p) => p.category === cat)),
@@ -179,14 +183,14 @@ export default function Blog() {
     <div className="bg-ivory pt-32 md:pt-40">
       <div className="mx-auto max-w-[1500px] px-6 md:px-10">
         {/* Header */}
-        <Eyebrow>Noorvi Journal</Eyebrow>
+        <Eyebrow>{site.storeName} Journal</Eyebrow>
         <h1 className="mt-5 font-display text-6xl leading-[0.9] font-semibold text-espresso md:text-[7.5rem]">
           <Lines lines={[<>Stories from</>, <em key="r" className="text-gold">the rack. ✦</em>]} />
         </h1>
         <Reveal delay={0.25}>
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-choco/75 md:text-base">
             New drops, styling inspiration, behind the scenes and everything happening at
-            Noorvi — fresh from the store and our feed.
+            {site.storeName} — fresh from the store and our feed.
           </p>
         </Reveal>
 
@@ -205,7 +209,7 @@ export default function Blog() {
                     : "border-espresso/20 bg-transparent text-choco/70 hover:border-gold hover:text-espresso"
                 )}
               >
-                {c.name}
+                {brandText(c.name, site.storeName)}
               </button>
             ))}
           </div>
@@ -236,7 +240,7 @@ export default function Blog() {
             <div className="border border-espresso/12 bg-cream px-8 py-24 text-center">
               <span className="font-display text-5xl text-gold">✦</span>
               <h2 className="mt-6 font-display text-4xl leading-tight font-semibold text-espresso md:text-5xl">
-                The next Noorvi story <em className="text-gold">is being styled.</em>
+                The next {site.storeName} story <em className="text-gold">is being styled.</em>
               </h2>
               <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-choco/65">
                 Nothing in this rail yet — but the racks are filling fast. Meanwhile, the
@@ -271,7 +275,7 @@ export default function Blog() {
                       <div className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px]">
                         <img
                           src={featured.featuredImageUrl}
-                          alt={featured.title}
+                          alt={brandText(featured.title, site.storeName)}
                           loading="eager"
                           className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
                         />
@@ -285,10 +289,10 @@ export default function Blog() {
                         <CalendarDays className="h-3.5 w-3.5 text-gold" /> {fmtDate(featured.publishedAt)}
                       </p>
                       <h2 className="mt-5 font-display text-4xl leading-[1.02] font-semibold text-espresso transition-colors group-hover:text-gold md:text-5xl">
-                        {featured.title}
+                        {brandText(featured.title, site.storeName)}
                       </h2>
                       <p className="mt-5 line-clamp-3 text-sm leading-relaxed text-choco/70 md:text-base">
-                        {featured.excerpt}
+                        {brandText(featured.excerpt, site.storeName)}
                       </p>
                       <span className="mt-8 inline-flex items-center gap-3 text-[11px] font-semibold tracking-[0.3em] text-espresso uppercase transition-all group-hover:gap-4 group-hover:text-gold">
                         Discover the story <ArrowUpRight className="h-4 w-4" />

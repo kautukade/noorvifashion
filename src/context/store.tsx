@@ -126,10 +126,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [enquiries, setEnquiries] = useState<Enquiry[]>(() =>
     load(KEYS.enquiries, [])
   );
-  const [site, setSite] = useState<SiteData>(() => ({
-    ...DEFAULT_SITE,
-    ...load<Partial<SiteData>>(KEYS.site, {}),
-  }));
+  const [site, setSite] = useState<SiteData>(() => {
+    const saved = load<Partial<SiteData>>(KEYS.site, {});
+    const merged: SiteData = { ...DEFAULT_SITE, ...saved };
+    if (saved.storeName && (!saved.heroTitle || saved.heroTitle === "NOORVI")) {
+      merged.heroTitle = saved.storeName.toUpperCase();
+    }
+    return merged;
+  });
   const [searchOpen, setSearchOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -190,7 +194,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const saveSite = useCallback((patch: Partial<SiteData>) => {
-    setSite((s) => ({ ...s, ...patch }));
+    setSite((s) => {
+      const next = { ...s, ...patch };
+      if (typeof patch.storeName === "string") {
+        const cleaned = patch.storeName.trim();
+        next.storeName = cleaned || s.storeName;
+
+        // Keep the default brand-style hero title in sync with the shop name,
+        // but preserve a deliberately customized hero headline.
+        const previousBrandTitles = new Set(["NOORVI", s.storeName.toUpperCase()]);
+        if (patch.heroTitle === undefined && previousBrandTitles.has(s.heroTitle)) {
+          next.heroTitle = next.storeName.toUpperCase();
+        }
+      }
+      return next;
+    });
   }, []);
 
   const resetDemo = useCallback(() => {
