@@ -40,7 +40,7 @@ export default function Hero() {
       ref={ref}
       onMouseMove={onMove}
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-espresso"
-      aria-label="Noorvi Fashion — new season"
+      aria-label={`${site.storeName} — new season`}
     >
       {/* Backdrop: video if configured, else cinematic slow-zoom image */}
       <div className="absolute inset-0">
@@ -57,7 +57,7 @@ export default function Hero() {
         ) : (
           <img
             src={MEDIA.hero}
-            alt="Noorvi Fashion campaign — model in ivory outfit"
+            alt={`${site.storeName} campaign — model in ivory outfit`}
             className="h-full w-full object-cover motion-safe:animate-kenburns"
           />
         )}
@@ -96,7 +96,7 @@ export default function Hero() {
               <path id="nv-circle" d="M 60,60 m -46,0 a 46,46 0 1,1 92,0 a 46,46 0 1,1 -92,0" />
             </defs>
             <text fill="#B9945B" fontSize="10.5" letterSpacing="3.4" fontFamily="Jost, sans-serif">
-              <textPath href="#nv-circle">NOORVI FASHION • PUSAD • NEW SEASON •</textPath>
+              <textPath href="#nv-circle">{site.storeName.toUpperCase()} • PUSAD • NEW SEASON •</textPath>
             </text>
           </svg>
           <span className="absolute inset-0 flex items-center justify-center font-display text-2xl text-gold">✦</span>
