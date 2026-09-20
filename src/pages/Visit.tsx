@@ -37,11 +37,11 @@ export default function Visit() {
       <div className="mx-auto max-w-[1500px] px-6 md:px-10">
         <Eyebrow>Find us</Eyebrow>
         <h1 className="mt-5 max-w-3xl font-display text-6xl leading-[0.9] font-semibold text-espresso md:text-[8rem]">
-          <Lines lines={[<>Visit</>, <em key="n" className="text-gold">Noorvi ✦</em>]} />
+          <Lines lines={[<>Visit</>, <em key="n" className="text-gold">{site.storeName} ✦</em>]} />
         </h1>
         <Reveal delay={0.25}>
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-choco/75 md:text-base">
-            Noorvi Ladies Wear lives inside Gold Plaza Complex on Sonar Line — the heart of
+            {site.storeName} lives inside Gold Plaza Complex on Sonar Line — the heart of
             Pusad's shopping stretch. Walk in for the rack, stay for the styling advice.
           </p>
         </Reveal>
@@ -52,7 +52,7 @@ export default function Visit() {
             <div className="border border-espresso/12 bg-cream">
               <div className="border-b border-espresso/12 bg-espresso px-8 py-6">
                 <p className="font-display text-3xl font-semibold text-ivory">
-                  Noorvi<span className="text-gold">✦</span> Fashion
+                  {site.storeName}<span className="text-gold">✦</span>
                 </p>
                 <p className="mt-1 text-[10px] tracking-[0.3em] text-gold uppercase">Ladies wear boutique</p>
               </div>
@@ -62,7 +62,7 @@ export default function Visit() {
                   <div>
                     <dt className="text-[10px] tracking-[0.3em] text-choco/55 uppercase">Address</dt>
                     <dd className="mt-1 text-sm leading-relaxed text-espresso">
-                      {storeConfig.address.line1}
+                      {site.storeName}
                       <br />
                       {site.addressLine2}
                       <br />
@@ -134,7 +134,7 @@ export default function Visit() {
             <Reveal delay={0.15} y={46}>
               <div className="relative">
                 <div className="absolute -inset-3 -translate-x-3 translate-y-3 border border-gold/50" aria-hidden />
-                <SmartImg src={MEDIA.store} alt="Inside the Noorvi boutique" className="relative aspect-[4/3] w-full" />
+                <SmartImg src={MEDIA.store} alt={`Inside the ${site.storeName} boutique`} className="relative aspect-[4/3] w-full" />
                 <span className="absolute top-5 left-5 bg-gold px-4 py-2 text-[10px] font-semibold tracking-[0.3em] text-espresso uppercase shadow-lg motion-safe:animate-floaty">
                   Gold Plaza ✦ Sonar Line
                 </span>
@@ -154,7 +154,7 @@ export default function Visit() {
                   </a>
                 </div>
                 <iframe
-                  title="Noorvi Fashion on the map — Gold Plaza Complex, Sonar Line, Pusad"
+                  title={`${site.storeName} on the map — Gold Plaza Complex, Sonar Line, Pusad`}
                   src="https://maps.google.com/maps?q=Gold%20Plaza%20Complex%20Sonar%20Line%20Pusad%20Maharashtra&t=&z=15&ieUTF8&iwloc=&output=embed"
                   className="h-[340px] w-full border-0 grayscale-[35%] sepia-[18%]"
                   loading="lazy"
