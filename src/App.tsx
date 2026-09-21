@@ -41,8 +41,11 @@ const BRAND_PATTERNS = [
 ];
 
 function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^$(){}|[\]\\]/g, "\\const Admin = lazy(() => import("./pages/Admin"));
-");
+  const special = "\\^$.*+?()[]{}|";
+  return value
+    .split("")
+    .map((char) => (special.includes(char) ? "\\" + char : char))
+    .join("");
 }
 
 /** Keep the existing design untouched while swapping Noorvi branding for the saved shop name. */
