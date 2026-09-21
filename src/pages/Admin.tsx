@@ -1012,8 +1012,9 @@ export default function Admin() {
 
         {module === "store" && (
           <SimpleFormPanel
-            note="The WhatsApp number is set in one central file: src/config/storeConfig.ts — see README. Everything below edits live."
+            note="Change Shop name anytime for client demos. The saved name replaces Noorvi branding across the website, including the opening screen."
             fields={[
+              { key: "shopName", label: "Shop name", hint: "Example: Pari Boutique. Save once and the website branding updates immediately." },
               { key: "addressLine2", label: "Address line 2", hint: "Complex / street" },
               { key: "addressLine3", label: "Address line 3", hint: "City, state, PIN" },
               { key: "hours", label: "Opening hours", hint: "Shown on Visit Store + footer" },
@@ -1021,8 +1022,13 @@ export default function Admin() {
             ]}
             values={site}
             onSave={(p) => {
-              saveSite(p);
-              pushToast("Store information saved ✦");
+              const shopName = String(p.shopName ?? site.shopName).trim();
+              if (!shopName) {
+                pushToast("Shop name cannot be empty");
+                return;
+              }
+              saveSite({ ...p, shopName });
+              pushToast(`Shop name saved: ${shopName} ✦`);
             }}
           />
         )}
