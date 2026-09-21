@@ -8,3 +8,5 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Production refresh: editable Shop name is enabled in Admin → Store Information.
