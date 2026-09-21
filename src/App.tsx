@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   BrowserRouter,
   Link,
@@ -30,6 +30,100 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Info = lazy(() => import("./pages/Info"));
 const Admin = lazy(() => import("./pages/Admin"));
+
+const DEFAULT_BRAND = "NOORVI";
+const BRAND_PATTERNS = [
+  /NOORVI FASHION/g,
+  /Noorvi Ladies Wear/g,
+  /Noorvi Fashion/g,
+  /\bNOORVI\b/g,
+  /\bNoorvi\b/g,
+];
+
+function escapeRegExp(value: string) {
+  const special = "\\^$.*+?()[]{}|";
+  return value
+    .split("")
+    .map((char) => (special.includes(char) ? "\\" + char : char))
+    .join("");
+}
+
+/** Keep the existing design untouched while swapping Noorvi branding for the saved shop name. */
+function BrandingSync() {
+  const { site } = useStore();
+  const previousName = useRef(DEFAULT_BRAND);
+
+  useEffect(() => {
+    const name = site.shopName.trim() || DEFAULT_BRAND;
+    const previous = previousName.current;
+    const token = "__DYNAMIC_SHOP_NAME__";
+
+    const brandify = (value: string) => {
+      let next = value;
+
+      if (previous && previous !== DEFAULT_BRAND && previous !== name) {
+        next = next.replace(new RegExp(escapeRegExp(previous), "g"), name);
+      }
+
+      if (name === DEFAULT_BRAND) return next;
+
+      next = next.split(name).join(token);
+      for (const pattern of BRAND_PATTERNS) next = next.replace(pattern, name);
+      return next.split(token).join(name);
+    };
+
+    const syncNode = (node: Node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parent = node.parentElement;
+        if (!parent || ["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) return;
+        const value = node.nodeValue;
+        if (!value) return;
+        const next = brandify(value);
+        if (next !== value) node.nodeValue = next;
+        return;
+      }
+
+      if (!(node instanceof Element)) return;
+      if (["SCRIPT", "STYLE", "TEXTAREA"].includes(node.tagName)) return;
+
+      const attrs = ["aria-label", "title", "alt"];
+      if (node.tagName === "META") attrs.push("content");
+      for (const attr of attrs) {
+        const value = node.getAttribute(attr);
+        if (!value) continue;
+        const next = brandify(value);
+        if (next !== value) node.setAttribute(attr, next);
+      }
+
+      node.childNodes.forEach(syncNode);
+    };
+
+    syncNode(document.documentElement);
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === "characterData" || mutation.type === "attributes") {
+          syncNode(mutation.target);
+        } else {
+          mutation.addedNodes.forEach(syncNode);
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["aria-label", "title", "alt", "content"],
+    });
+
+    previousName.current = name;
+    return () => observer.disconnect();
+  }, [site.shopName]);
+
+  return null;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -168,6 +262,7 @@ function Shell() {
 export default function App() {
   return (
     <StoreProvider>
+      <BrandingSync />
       <BrowserRouter>
         <MotionConfig reducedMotion="user">
           <Shell />
