@@ -27,6 +27,7 @@ export type Enquiry = {
 };
 
 export type SiteData = {
+  shopName: string;
   heroTitle: string;
   heroSubtitle: string;
   heroSupport: string;
@@ -66,6 +67,7 @@ type StoreCtx = {
 };
 
 const DEFAULT_SITE: SiteData = {
+  shopName: "NOORVI",
   heroTitle: "NOORVI",
   heroSubtitle: "New looks. New you.",
   heroSupport: "Trending girls wear — now in Pusad.",
